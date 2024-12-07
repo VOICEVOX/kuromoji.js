@@ -20,14 +20,16 @@ import InvokeDefinitionMap from "../../src/dict/InvokeDefinitionMap.js";
 import CharacterDefinitionBuilder from "../../src/dict/builder/CharacterDefinitionBuilder.js";
 
 import fs from "fs";
-var expect = require("chai").expect;
+import { expect } from "chai";
+
+import { describe, it, before } from "node:test";
 
 var DIC_DIR = "test/resource/minimum-dic/";
 
 describe("CharacterDefinition from char.def", function () {
   var char_def; // target object
 
-  before("Create CharacterDefinition", function (done) {
+  before(function () {
     var cd_builder = new CharacterDefinitionBuilder();
     fs.readFileSync(DIC_DIR + "char.def", "utf-8")
       .split("\n")
@@ -35,7 +37,6 @@ describe("CharacterDefinition from char.def", function () {
         cd_builder.putLine(line);
       });
     char_def = cd_builder.build();
-    done();
   });
 
   it("lookup by space, return SPACE class", function () {

@@ -16,10 +16,12 @@
  */
 
 import fs from "fs";
-var expect = require("chai").expect;
+import { expect } from "chai";
 
-import kuromoji from "../../../src/kuromoji.js";
+import * as kuromoji from "../../../src/kuromoji.js";
 import Tokenizer from "../../../src/Tokenizer.js";
+
+import { describe, it, before } from "node:test";
 
 var DIC_DIR = "test/resource/minimum-dic/";
 var connection_costs_file = DIC_DIR + "matrix.def";
@@ -28,11 +30,9 @@ var unk_def_file = DIC_DIR + "unk.def";
 var tid_dic_file = DIC_DIR + "minimum.csv";
 
 describe("DictionaryBuilder", function () {
-  this.timeout(30000);
-
   var kuromoji_dic = null; // target object of DynamicDictionaries to build
 
-  before("Build", function (done) {
+  before(function () {
     // Build token info dictionary
     var builder = kuromoji.dictionaryBuilder();
     var tokenInfo = fs.readFileSync(tid_dic_file, "utf-8");
@@ -60,8 +60,6 @@ describe("DictionaryBuilder", function () {
     });
 
     kuromoji_dic = builder.build();
-
-    done();
   });
 
   it("Dictionary not to be null", function () {

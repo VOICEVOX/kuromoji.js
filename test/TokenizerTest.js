@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
-import kuromoji from "../src/kuromoji.js.js"; // Not to be browserifiy-ed
+import { expect } from "chai";
+import * as kuromoji from "../src/kuromoji.js"; // Not to be browserifiy-ed
 import Tokenizer from "../src/Tokenizer.js";
+
+import { describe, it, before } from "node:test";
 
 var DIC_DIR = "dict/";
 
@@ -50,12 +52,15 @@ describe("Tokenizer static method test", function () {
 describe("Tokenizer for IPADic", function () {
   var tokenizer = null; // target object
 
-  before(function (done) {
-    this.timeout(5 * 60 * 1000); // 5 min
-    kuromoji.builder({ dicPath: DIC_DIR }).build(function (error, _tokenizer) {
-      tokenizer = _tokenizer;
-      expect(tokenizer).to.be.a("object");
-      done();
+  before(async function () {
+    tokenizer = await new Promise((resolve, reject) => {
+      kuromoji.builder({ dicPath: DIC_DIR }).build((error, _tokenizer) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(_tokenizer);
+        }
+      });
     });
   });
 

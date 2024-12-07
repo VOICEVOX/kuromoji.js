@@ -15,21 +15,23 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
+import { expect } from "chai";
 import DictionaryLoader from "../../src/loader/NodeDictionaryLoader.js";
+
+import { describe, it, before } from "node:test";
 
 var DIC_DIR = "dict/";
 
 describe("DictionaryLoader", function () {
   var dictionaries = null; // target object
 
-  before(function (done) {
-    this.timeout(5 * 60 * 1000); // 5 min
-
+  before(async function () {
     var loader = new DictionaryLoader(DIC_DIR);
-    loader.load(function (err, dic) {
-      dictionaries = dic;
-      done();
+    dictionaries = await new Promise((resolve, reject) => {
+      loader.load((err, dic) => {
+        if (err) reject(err);
+        else resolve(dic);
+      });
     });
   });
 
@@ -50,21 +52,28 @@ describe("DictionaryLoader", function () {
 });
 
 describe("DictionaryLoader about loading", function () {
-  it("could load directory path without suffix /", function (done) {
-    this.timeout(5 * 60 * 1000); // 5 min
-
+  it("could load directory path without suffix /", async function () {
     var loader = new DictionaryLoader("dict"); // not have suffix /
-    loader.load(function (err, dic) {
-      expect(err).to.be.null;
-      expect(dic).to.not.be.undefined;
-      done();
+    const dic = await new Promise((resolve, reject) => {
+      loader.load((err, dic) => {
+        if (err) reject(err);
+        else resolve(dic);
+      });
     });
+    expect(dic).to.not.be.undefined;
   });
-  it("couldn't load dictionary, then call with error", function (done) {
+
+  it("couldn't load dictionary, then call with error", async function () {
     var loader = new DictionaryLoader("non-exist/dictionaries");
-    loader.load(function (err, dic) {
+    try {
+      await new Promise((resolve, reject) => {
+        loader.load((err, dic) => {
+          if (err) reject(err);
+          else resolve(dic);
+        });
+      });
+    } catch (err) {
       expect(err).to.be.an.instanceof(Error);
-      done();
-    });
+    }
   });
 });

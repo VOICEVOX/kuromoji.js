@@ -15,22 +15,29 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
+import { expect } from "chai";
 import DictionaryLoader from "../../src/loader/NodeDictionaryLoader.js";
 import ViterbiBuilder from "../../src/viterbi/ViterbiBuilder.js";
+
+import { describe, it, before } from "node:test";
 
 var DIC_DIR = "dict/";
 
 describe("ViterbiBuilder", function () {
   var viterbi_builder = null; // target object
 
-  before(function (done) {
-    this.timeout(5 * 60 * 1000); // 5 min
+  before(async function () {
     var loader = new DictionaryLoader(DIC_DIR);
-    loader.load(function (err, dic) {
-      viterbi_builder = new ViterbiBuilder(dic);
-      done();
+    const dic = await new Promise((resolve, reject) => {
+      loader.load((err, dic) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(dic);
+        }
+      });
     });
+    viterbi_builder = new ViterbiBuilder(dic);
   });
 
   it("Unknown word", function () {

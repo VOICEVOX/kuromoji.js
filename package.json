@@ -4,7 +4,8 @@
   "description": "JavaScript implementation of Japanese morphological analyzer",
   "version": "0.0.1",
   "scripts": {
-    "fmt": "prettier --write ./src/"
+    "fmt": "prettier --write ./src/",
+    "test": "node --test"
   },
   "dependencies": {
     "async": "^2.0.1",
@@ -14,6 +15,7 @@
   "license": "Apache-2.0",
   "main": "./src/kuromoji.js",
   "devDependencies": {
+    "chai": "^5.1.2",
     "prettier": "^3.4.2"
   }
 }
