@@ -54,13 +54,15 @@ describe("Tokenizer for IPADic", function () {
 
   before(async function () {
     tokenizer = await new Promise((resolve, reject) => {
-      kuromoji.builder({ dicPath: DIC_DIR }).build((error, _tokenizer) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(_tokenizer);
-        }
-      });
+      kuromoji
+        .builder({ dicPath: DIC_DIR, nodeOrBrowser: "node" })
+        .build((error, _tokenizer) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(_tokenizer);
+          }
+        });
     });
   });
 

@@ -3,6 +3,9 @@
   "type": "module",
   "description": "JavaScript implementation of Japanese morphological analyzer",
   "version": "0.0.1",
+  "exports": {
+    ".": "./src/kuromoji.js"
+  },
   "scripts": {
     "fmt": "prettier --write ./src/",
     "test": "node --test"

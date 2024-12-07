@@ -16,7 +16,8 @@
  */
 
 import Tokenizer from "./Tokenizer.js";
-import DictionaryLoader from "./loader/NodeDictionaryLoader.js";
+import NodeDictionaryLoader from "./loader/NodeDictionaryLoader.js";
+import BrowserDictionaryLoader from "./loader/BrowserDictionaryLoader.js";
 
 /**
  * TokenizerBuilder create Tokenizer instance.
@@ -25,6 +26,14 @@ import DictionaryLoader from "./loader/NodeDictionaryLoader.js";
  * @constructor
  */
 function TokenizerBuilder(option) {
+  const node_or_browser = option.nodeOrBrowser;
+  if (node_or_browser != "node" && node_or_browser != "browser") {
+    throw new Error(
+      `nodeOrBrowser must be 'node' or 'browser': ${node_or_browser}`,
+    );
+  }
+  this.node_or_browser = node_or_browser;
+
   if (option.dicPath == null) {
     this.dic_path = "dict/";
   } else {
@@ -37,7 +46,10 @@ function TokenizerBuilder(option) {
  * @param {TokenizerBuilder~onLoad} callback Callback function
  */
 TokenizerBuilder.prototype.build = function (callback) {
-  var loader = new DictionaryLoader(this.dic_path);
+  var loader =
+    this.node_or_browser == "node"
+      ? new NodeDictionaryLoader(this.dic_path)
+      : new BrowserDictionaryLoader(this.dic_path);
   loader.load(function (err, dic) {
     callback(err, new Tokenizer(dic));
   });
