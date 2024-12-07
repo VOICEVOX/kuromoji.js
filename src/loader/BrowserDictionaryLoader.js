@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import zlib from "zlibjs/bin/gunzip.min.js";
+import * as fflate from "fflate";
 import DictionaryLoader from "./DictionaryLoader.js";
 
 /**
@@ -45,8 +45,7 @@ BrowserDictionaryLoader.prototype.loadArrayBuffer = function (url, callback) {
     }
     var arraybuffer = this.response;
 
-    var gz = new zlib.Zlib.Gunzip(new Uint8Array(arraybuffer));
-    var typed_array = gz.decompress();
+    var typed_array = fflate.decompress(new Uint8Array(arraybuffer));
     callback(null, typed_array.buffer);
   };
   xhr.onerror = function (err) {
