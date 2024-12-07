@@ -1,3 +1,11 @@
+# VOICEVOX kuromoji.js
+
+[VOICEVOXエディタ](https://github.com/VOICEVOX/voicevox)のモック用にチューニングした[kuromoji.js](https://github.com/takuyaa/kuromoji.js)です。
+ESModuleとして利用できます。
+
+機能追加はしない予定で、VOICEVOXエディタ内で不都合が生じない限り積極的にメンテナンスもしない予定です。
+標準的なライブラリやフレームワークを用いた開発環境の改善は歓迎します。
+
 ## 使い方
 
 ```sh
