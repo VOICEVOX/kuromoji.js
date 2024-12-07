@@ -4,7 +4,10 @@
   "description": "JavaScript implementation of Japanese morphological analyzer",
   "version": "0.0.1",
   "exports": {
-    ".": "./src/kuromoji.js"
+    ".": {
+      "import": "./src/kuromoji.js",
+      "types": "./src/index.d.ts"
+    }
   },
   "scripts": {
     "fmt": "prettier --write ./src/",

@@ -1,5 +1,10 @@
 /// <reference types="doublearray" />
 
+/**
+ * このファイルには、MITライセンスの下で提供されている @types/kuromoji プロジェクトからのコードが含まれています。
+ * 詳細な貢献者情報は各定義ファイルの冒頭にあります。
+ */
+
 // dict/ConnectionCosts.js
 export interface ConnectionCosts {
   buffer: Int16Array;
