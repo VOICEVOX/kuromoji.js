@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
