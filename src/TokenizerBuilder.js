@@ -30,7 +30,7 @@ function TokenizerBuilder(option) {
   const node_or_browser = option.nodeOrBrowser;
   if (node_or_browser != "node" && node_or_browser != "browser") {
     throw new Error(
-      `nodeOrBrowser must be 'node' or 'browser': ${node_or_browser}`,
+      `Invalid value for nodeOrBrowser: ${node_or_browser}. Expected 'node' or 'browser'`,
     );
   }
   this.node_or_browser = node_or_browser;
