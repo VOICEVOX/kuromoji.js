@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import path from "path";
 import async from "async";
 import DynamicDictionaries from "../dict/DynamicDictionaries.js";
 
@@ -42,6 +41,10 @@ DictionaryLoader.prototype.load = function (load_callback) {
   var dic_path = this.dic_path;
   var loadArrayBuffer = this.loadArrayBuffer;
 
+  function joinPath(...parts) {
+    return parts.join("/");
+  }
+
   async.parallel(
     [
       // Trie
@@ -50,7 +53,7 @@ DictionaryLoader.prototype.load = function (load_callback) {
           ["base.dat.gz", "check.dat.gz"],
           function (filename, _callback) {
             loadArrayBuffer(
-              path.join(dic_path, filename),
+              joinPath(dic_path, filename),
               function (err, buffer) {
                 if (err) {
                   return _callback(err);
@@ -77,7 +80,7 @@ DictionaryLoader.prototype.load = function (load_callback) {
           ["tid.dat.gz", "tid_pos.dat.gz", "tid_map.dat.gz"],
           function (filename, _callback) {
             loadArrayBuffer(
-              path.join(dic_path, filename),
+              joinPath(dic_path, filename),
               function (err, buffer) {
                 if (err) {
                   return _callback(err);
@@ -106,7 +109,7 @@ DictionaryLoader.prototype.load = function (load_callback) {
       // Connection cost matrix
       function (callback) {
         loadArrayBuffer(
-          path.join(dic_path, "cc.dat.gz"),
+          joinPath(dic_path, "cc.dat.gz"),
           function (err, buffer) {
             if (err) {
               return callback(err);
@@ -130,7 +133,7 @@ DictionaryLoader.prototype.load = function (load_callback) {
           ],
           function (filename, _callback) {
             loadArrayBuffer(
-              path.join(dic_path, filename),
+              joinPath(dic_path, filename),
               function (err, buffer) {
                 if (err) {
                   return _callback(err);
