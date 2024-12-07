@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-"use strict";
-
 /**
  * ViterbiNode is a node of ViterbiLattice
  * @param {number} node_name Word ID
@@ -55,4 +53,4 @@ function ViterbiNode(
   this.type = type;
 }
 
-module.exports = ViterbiNode;
+export default ViterbiNode;

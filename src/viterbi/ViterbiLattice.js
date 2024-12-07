@@ -15,9 +15,7 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var ViterbiNode = require("./ViterbiNode");
+import ViterbiNode from "./ViterbiNode.js";
 
 /**
  * ViterbiLattice is a lattice in Viterbi algorithm
@@ -59,4 +57,4 @@ ViterbiLattice.prototype.appendEos = function () {
   ];
 };
 
-module.exports = ViterbiLattice;
+export default ViterbiLattice;

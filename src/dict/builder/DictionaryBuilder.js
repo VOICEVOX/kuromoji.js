@@ -15,14 +15,12 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var doublearray = require("doublearray");
-var DynamicDictionaries = require("../DynamicDictionaries");
-var TokenInfoDictionary = require("../TokenInfoDictionary");
-var ConnectionCostsBuilder = require("./ConnectionCostsBuilder");
-var CharacterDefinitionBuilder = require("./CharacterDefinitionBuilder");
-var UnknownDictionary = require("../UnknownDictionary");
+import doublearray from "doublearray";
+import DynamicDictionaries from "../DynamicDictionaries.js";
+import TokenInfoDictionary from "../TokenInfoDictionary.js";
+import ConnectionCostsBuilder from "./ConnectionCostsBuilder.js";
+import CharacterDefinitionBuilder from "./CharacterDefinitionBuilder.js";
+import UnknownDictionary from "../UnknownDictionary.js";
 
 /**
  * Build dictionaries (token info, connection costs)
@@ -160,4 +158,4 @@ DictionaryBuilder.prototype.buildDoubleArray = function () {
   return builder.build(words);
 };
 
-module.exports = DictionaryBuilder;
+export default DictionaryBuilder;

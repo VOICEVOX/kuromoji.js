@@ -15,11 +15,9 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var TokenInfoDictionary = require("./TokenInfoDictionary");
-var CharacterDefinition = require("./CharacterDefinition");
-var ByteBuffer = require("../util/ByteBuffer");
+import TokenInfoDictionary from "./TokenInfoDictionary.js";
+import CharacterDefinition from "./CharacterDefinition.js";
+import ByteBuffer from "../util/ByteBuffer.js";
 
 /**
  * UnknownDictionary
@@ -68,4 +66,4 @@ UnknownDictionary.prototype.loadUnknownDictionaries = function (
   );
 };
 
-module.exports = UnknownDictionary;
+export default UnknownDictionary;

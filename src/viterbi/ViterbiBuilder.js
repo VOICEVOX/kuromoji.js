@@ -15,11 +15,9 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var ViterbiNode = require("./ViterbiNode");
-var ViterbiLattice = require("./ViterbiLattice");
-var SurrogateAwareString = require("../util/SurrogateAwareString");
+import ViterbiNode from "./ViterbiNode.js";
+import ViterbiLattice from "./ViterbiLattice.js";
+import SurrogateAwareString from "../util/SurrogateAwareString.js";
 
 /**
  * ViterbiBuilder builds word lattice (ViterbiLattice)
@@ -133,4 +131,4 @@ ViterbiBuilder.prototype.build = function (sentence_str) {
   return lattice;
 };
 
-module.exports = ViterbiBuilder;
+export default ViterbiBuilder;

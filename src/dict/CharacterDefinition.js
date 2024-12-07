@@ -15,11 +15,9 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var InvokeDefinitionMap = require("./InvokeDefinitionMap");
-var CharacterClass = require("./CharacterClass");
-var SurrogateAwareString = require("../util/SurrogateAwareString");
+import InvokeDefinitionMap from "./InvokeDefinitionMap.js";
+import CharacterClass from "./CharacterClass.js";
+import SurrogateAwareString from "../util/SurrogateAwareString.js";
 
 var DEFAULT_CATEGORY = "DEFAULT";
 
@@ -233,4 +231,4 @@ CharacterDefinition.prototype.lookup = function (ch) {
   return this.invoke_definition_map.getCharacterClass(class_id);
 };
 
-module.exports = CharacterDefinition;
+export default CharacterDefinition;

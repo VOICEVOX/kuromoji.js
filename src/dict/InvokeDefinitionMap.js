@@ -15,10 +15,8 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var ByteBuffer = require("../util/ByteBuffer");
-var CharacterClass = require("./CharacterClass");
+import ByteBuffer from "../util/ByteBuffer.js";
+import CharacterClass from "./CharacterClass.js";
 
 /**
  * InvokeDefinitionMap represents invoke definition a part of char.def
@@ -115,4 +113,4 @@ InvokeDefinitionMap.prototype.toBuffer = function () {
   return buffer.buffer;
 };
 
-module.exports = InvokeDefinitionMap;
+export default InvokeDefinitionMap;

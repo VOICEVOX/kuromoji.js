@@ -15,13 +15,11 @@
  * limitations under the License.
  */
 
-"use strict";
+import ViterbiBuilder from "./viterbi/ViterbiBuilder.js";
+import ViterbiSearcher from "./viterbi/ViterbiSearcher.js";
+import IpadicFormatter from "./util/IpadicFormatter.js";
 
-var ViterbiBuilder = require("./viterbi/ViterbiBuilder");
-var ViterbiSearcher = require("./viterbi/ViterbiSearcher");
-var IpadicFormatter = require("./util/IpadicFormatter");
-
-var PUNCTUATION = /、|。/;
+const PUNCTUATION = /、|。/;
 
 /**
  * Tokenizer
@@ -142,4 +140,4 @@ Tokenizer.prototype.getLattice = function (text) {
   return this.viterbi_builder.build(text);
 };
 
-module.exports = Tokenizer;
+export default Tokenizer;

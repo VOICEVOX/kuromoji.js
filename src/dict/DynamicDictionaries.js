@@ -15,12 +15,10 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var doublearray = require("doublearray");
-var TokenInfoDictionary = require("./TokenInfoDictionary");
-var ConnectionCosts = require("./ConnectionCosts");
-var UnknownDictionary = require("./UnknownDictionary");
+import doublearray from "doublearray";
+import TokenInfoDictionary from "./TokenInfoDictionary.js";
+import ConnectionCosts from "./ConnectionCosts.js";
+import UnknownDictionary from "./UnknownDictionary.js";
 
 /**
  * Dictionaries container for Tokenizer
@@ -100,4 +98,4 @@ DynamicDictionaries.prototype.loadUnknownDictionaries = function (
   return this;
 };
 
-module.exports = DynamicDictionaries;
+export default DynamicDictionaries;

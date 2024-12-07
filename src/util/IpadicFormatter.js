@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-"use strict";
-
 /**
  * Mappings between IPADIC dictionary features and tokenized results
  * @constructor
@@ -74,4 +72,4 @@ IpadicFormatter.prototype.formatUnknownEntry = function (
   return token;
 };
 
-module.exports = IpadicFormatter;
+export default IpadicFormatter;

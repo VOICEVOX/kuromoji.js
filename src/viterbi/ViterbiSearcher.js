@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-"use strict";
-
 /**
  * ViterbiSearcher is for searching best Viterbi path
  * @param {ConnectionCosts} connection_costs Connection costs matrix
@@ -102,4 +100,4 @@ ViterbiSearcher.prototype.backward = function (lattice) {
   return shortest_path.reverse();
 };
 
-module.exports = ViterbiSearcher;
+export default ViterbiSearcher;

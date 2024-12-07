@@ -15,10 +15,8 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var CharacterDefinition = require("../CharacterDefinition");
-var InvokeDefinitionMap = require("../InvokeDefinitionMap");
+import CharacterDefinition from "../CharacterDefinition.js";
+import InvokeDefinitionMap from "../InvokeDefinitionMap.js";
 
 var CATEGORY_DEF_PATTERN = /^(\w+)\s+(\d)\s+(\d)\s+(\d)/;
 var CATEGORY_MAPPING_PATTERN =
@@ -74,4 +72,4 @@ CharacterDefinitionBuilder.prototype.build = function () {
   return this.char_def;
 };
 
-module.exports = CharacterDefinitionBuilder;
+export default CharacterDefinitionBuilder;

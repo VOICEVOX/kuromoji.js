@@ -15,10 +15,8 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var zlib = require("zlibjs/bin/gunzip.min.js");
-var DictionaryLoader = require("./DictionaryLoader");
+import zlib from "zlibjs/bin/gunzip.min.js";
+import DictionaryLoader from "./DictionaryLoader.js";
 
 /**
  * BrowserDictionaryLoader inherits DictionaryLoader, using jQuery XHR for download
@@ -64,4 +62,4 @@ BrowserDictionaryLoader.prototype.loadArrayBuffer = function (url, callback) {
  * @param {Uint8Array} buffer Loaded buffer
  */
 
-module.exports = BrowserDictionaryLoader;
+export default BrowserDictionaryLoader;
