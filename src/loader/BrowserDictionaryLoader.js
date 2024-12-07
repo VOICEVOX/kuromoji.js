@@ -45,7 +45,7 @@ BrowserDictionaryLoader.prototype.loadArrayBuffer = function (url, callback) {
     }
     var arraybuffer = this.response;
 
-    var typed_array = fflate.decompress(new Uint8Array(arraybuffer));
+    var typed_array = fflate.decompressSync(new Uint8Array(arraybuffer));
     callback(null, typed_array.buffer);
   };
   xhr.onerror = function (err) {
