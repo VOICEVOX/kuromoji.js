@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
@@ -15,8 +16,6 @@
  * limitations under the License.
  */
 
-"use strict";
-
 /**
  * ViterbiNode is a node of ViterbiLattice
  * @param {number} node_name Word ID
@@ -29,21 +28,30 @@
  * @param {string} surface_form Surface form of this word
  * @constructor
  */
-function ViterbiNode(node_name, node_cost, start_pos, length, type, left_id, right_id, surface_form) {
-    this.name = node_name;
-    this.cost = node_cost;
-    this.start_pos = start_pos;
-    this.length = length;
-    this.left_id = left_id;
-    this.right_id = right_id;
-    this.prev = null;
-    this.surface_form = surface_form;
-    if (type === "BOS") {
-        this.shortest_cost = 0;
-    } else {
-        this.shortest_cost = Number.MAX_VALUE;
-    }
-    this.type = type;
+function ViterbiNode(
+  node_name,
+  node_cost,
+  start_pos,
+  length,
+  type,
+  left_id,
+  right_id,
+  surface_form,
+) {
+  this.name = node_name;
+  this.cost = node_cost;
+  this.start_pos = start_pos;
+  this.length = length;
+  this.left_id = left_id;
+  this.right_id = right_id;
+  this.prev = null;
+  this.surface_form = surface_form;
+  if (type === "BOS") {
+    this.shortest_cost = 0;
+  } else {
+    this.shortest_cost = Number.MAX_VALUE;
+  }
+  this.type = type;
 }
 
-module.exports = ViterbiNode;
+export default ViterbiNode;

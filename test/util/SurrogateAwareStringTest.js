@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
@@ -15,34 +16,36 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
-var SurrogateAwareString = require("../../src/util/SurrogateAwareString");
+import { expect } from "chai";
+import SurrogateAwareString from "../../src/util/SurrogateAwareString.js";
+
+import { describe, it, beforeEach } from "node:test";
 
 describe("SurrogateAwareString", function () {
-    it("length 1", function () {
-        var str = new SurrogateAwareString("𠮷");  // target object
-        expect(str.length).to.eql(1);
-    });
-    it("length 3", function () {
-        var str = new SurrogateAwareString("𠮷野屋");  // target object
-        expect(str.length).to.eql(3);
-    });
-    it("slice", function () {
-        var str = new SurrogateAwareString("𠮷野屋");  // target object
-        expect(str.slice(0)).to.eql("𠮷野屋");
-        expect(str.slice(1)).to.eql("野屋");
-        expect(str.slice(2)).to.eql("屋");
-    });
-    it("charAt", function () {
-        var str = new SurrogateAwareString("𠮷野屋");  // target object
-        expect(str.charAt(0)).to.eql("𠮷");
-        expect(str.charAt(1)).to.eql("野");
-        expect(str.charAt(2)).to.eql("屋");
-    });
-    it("charCodeAt", function () {
-        var str = new SurrogateAwareString("𠮷野屋");  // target object
-        expect(str.charCodeAt(0)).to.eql(0x20bb7);
-        expect(str.charCodeAt(1)).to.eql("野".charCodeAt(0));
-        expect(str.charCodeAt(2)).to.eql("屋".charCodeAt(0));
-    });
+  it("length 1", function () {
+    var str = new SurrogateAwareString("𠮷"); // target object
+    expect(str.length).to.eql(1);
+  });
+  it("length 3", function () {
+    var str = new SurrogateAwareString("𠮷野屋"); // target object
+    expect(str.length).to.eql(3);
+  });
+  it("slice", function () {
+    var str = new SurrogateAwareString("𠮷野屋"); // target object
+    expect(str.slice(0)).to.eql("𠮷野屋");
+    expect(str.slice(1)).to.eql("野屋");
+    expect(str.slice(2)).to.eql("屋");
+  });
+  it("charAt", function () {
+    var str = new SurrogateAwareString("𠮷野屋"); // target object
+    expect(str.charAt(0)).to.eql("𠮷");
+    expect(str.charAt(1)).to.eql("野");
+    expect(str.charAt(2)).to.eql("屋");
+  });
+  it("charCodeAt", function () {
+    var str = new SurrogateAwareString("𠮷野屋"); // target object
+    expect(str.charCodeAt(0)).to.eql(0x20bb7);
+    expect(str.charCodeAt(1)).to.eql("野".charCodeAt(0));
+    expect(str.charCodeAt(2)).to.eql("屋".charCodeAt(0));
+  });
 });

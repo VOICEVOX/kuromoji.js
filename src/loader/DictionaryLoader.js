@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
@@ -15,11 +16,8 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var path = require("path");
-var async = require("async");
-var DynamicDictionaries = require("../dict/DynamicDictionaries");
+import async from "async";
+import DynamicDictionaries from "../dict/DynamicDictionaries.js";
 
 /**
  * DictionaryLoader base constructor
@@ -27,12 +25,12 @@ var DynamicDictionaries = require("../dict/DynamicDictionaries");
  * @constructor
  */
 function DictionaryLoader(dic_path) {
-    this.dic = new DynamicDictionaries();
-    this.dic_path = dic_path;
+  this.dic = new DynamicDictionaries();
+  this.dic_path = dic_path;
 }
 
 DictionaryLoader.prototype.loadArrayBuffer = function (file, callback) {
-    throw new Error("DictionaryLoader#loadArrayBuffer should be overwrite");
+  throw new Error("DictionaryLoader#loadArrayBuffer should be overwrite");
 };
 
 /**
@@ -40,91 +38,140 @@ DictionaryLoader.prototype.loadArrayBuffer = function (file, callback) {
  * @param {DictionaryLoader~onLoad} load_callback Callback function called after loaded
  */
 DictionaryLoader.prototype.load = function (load_callback) {
-    var dic = this.dic;
-    var dic_path = this.dic_path;
-    var loadArrayBuffer = this.loadArrayBuffer;
+  var dic = this.dic;
+  var dic_path = this.dic_path;
+  var loadArrayBuffer = this.loadArrayBuffer;
 
-    async.parallel([
-        // Trie
-        function (callback) {
-            async.map([ "base.dat.gz", "check.dat.gz" ], function (filename, _callback) {
-                loadArrayBuffer(path.join(dic_path, filename), function (err, buffer) {
-                    if(err) {
-                        return _callback(err);
-                    }
-                    _callback(null, buffer);
-                });
-            }, function (err, buffers) {
-                if(err) {
-                    return callback(err);
-                }
-                var base_buffer = new Int32Array(buffers[0]);
-                var check_buffer = new Int32Array(buffers[1]);
+  function joinPath(...parts) {
+    return parts.join("/");
+  }
 
-                dic.loadTrie(base_buffer, check_buffer);
-                callback(null);
-            });
-        },
-        // Token info dictionaries
-        function (callback) {
-            async.map([ "tid.dat.gz", "tid_pos.dat.gz", "tid_map.dat.gz" ], function (filename, _callback) {
-                loadArrayBuffer(path.join(dic_path, filename), function (err, buffer) {
-                    if(err) {
-                        return _callback(err);
-                    }
-                    _callback(null, buffer);
-                });
-            }, function (err, buffers) {
-                if(err) {
-                    return callback(err);
+  async.parallel(
+    [
+      // Trie
+      function (callback) {
+        async.map(
+          ["base.dat.gz", "check.dat.gz"],
+          function (filename, _callback) {
+            loadArrayBuffer(
+              joinPath(dic_path, filename),
+              function (err, buffer) {
+                if (err) {
+                  return _callback(err);
                 }
-                var token_info_buffer = new Uint8Array(buffers[0]);
-                var pos_buffer = new Uint8Array(buffers[1]);
-                var target_map_buffer = new Uint8Array(buffers[2]);
+                _callback(null, buffer);
+              },
+            );
+          },
+          function (err, buffers) {
+            if (err) {
+              return callback(err);
+            }
+            var base_buffer = new Int32Array(buffers[0]);
+            var check_buffer = new Int32Array(buffers[1]);
 
-                dic.loadTokenInfoDictionaries(token_info_buffer, pos_buffer, target_map_buffer);
-                callback(null);
-            });
-        },
-        // Connection cost matrix
-        function (callback) {
-            loadArrayBuffer(path.join(dic_path, "cc.dat.gz"), function (err, buffer) {
-                if(err) {
-                    return callback(err);
+            dic.loadTrie(base_buffer, check_buffer);
+            callback(null);
+          },
+        );
+      },
+      // Token info dictionaries
+      function (callback) {
+        async.map(
+          ["tid.dat.gz", "tid_pos.dat.gz", "tid_map.dat.gz"],
+          function (filename, _callback) {
+            loadArrayBuffer(
+              joinPath(dic_path, filename),
+              function (err, buffer) {
+                if (err) {
+                  return _callback(err);
                 }
-                var cc_buffer = new Int16Array(buffer);
-                dic.loadConnectionCosts(cc_buffer);
-                callback(null);
-            });
-        },
-        // Unknown dictionaries
-        function (callback) {
-            async.map([ "unk.dat.gz", "unk_pos.dat.gz", "unk_map.dat.gz", "unk_char.dat.gz", "unk_compat.dat.gz", "unk_invoke.dat.gz" ], function (filename, _callback) {
-                loadArrayBuffer(path.join(dic_path, filename), function (err, buffer) {
-                    if(err) {
-                        return _callback(err);
-                    }
-                    _callback(null, buffer);
-                });
-            }, function (err, buffers) {
-                if(err) {
-                    return callback(err);
-                }
-                var unk_buffer = new Uint8Array(buffers[0]);
-                var unk_pos_buffer = new Uint8Array(buffers[1]);
-                var unk_map_buffer = new Uint8Array(buffers[2]);
-                var cat_map_buffer = new Uint8Array(buffers[3]);
-                var compat_cat_map_buffer = new Uint32Array(buffers[4]);
-                var invoke_def_buffer = new Uint8Array(buffers[5]);
+                _callback(null, buffer);
+              },
+            );
+          },
+          function (err, buffers) {
+            if (err) {
+              return callback(err);
+            }
+            var token_info_buffer = new Uint8Array(buffers[0]);
+            var pos_buffer = new Uint8Array(buffers[1]);
+            var target_map_buffer = new Uint8Array(buffers[2]);
 
-                dic.loadUnknownDictionaries(unk_buffer, unk_pos_buffer, unk_map_buffer, cat_map_buffer, compat_cat_map_buffer, invoke_def_buffer);
-                // dic.loadUnknownDictionaries(char_buffer, unk_buffer);
-                callback(null);
-            });
-        }
-    ], function (err) {
-        load_callback(err, dic);
-    });
+            dic.loadTokenInfoDictionaries(
+              token_info_buffer,
+              pos_buffer,
+              target_map_buffer,
+            );
+            callback(null);
+          },
+        );
+      },
+      // Connection cost matrix
+      function (callback) {
+        loadArrayBuffer(
+          joinPath(dic_path, "cc.dat.gz"),
+          function (err, buffer) {
+            if (err) {
+              return callback(err);
+            }
+            var cc_buffer = new Int16Array(buffer);
+            dic.loadConnectionCosts(cc_buffer);
+            callback(null);
+          },
+        );
+      },
+      // Unknown dictionaries
+      function (callback) {
+        async.map(
+          [
+            "unk.dat.gz",
+            "unk_pos.dat.gz",
+            "unk_map.dat.gz",
+            "unk_char.dat.gz",
+            "unk_compat.dat.gz",
+            "unk_invoke.dat.gz",
+          ],
+          function (filename, _callback) {
+            loadArrayBuffer(
+              joinPath(dic_path, filename),
+              function (err, buffer) {
+                if (err) {
+                  return _callback(err);
+                }
+                _callback(null, buffer);
+              },
+            );
+          },
+          function (err, buffers) {
+            if (err) {
+              return callback(err);
+            }
+            var unk_buffer = new Uint8Array(buffers[0]);
+            var unk_pos_buffer = new Uint8Array(buffers[1]);
+            var unk_map_buffer = new Uint8Array(buffers[2]);
+            var cat_map_buffer = new Uint8Array(buffers[3]);
+            var compat_cat_map_buffer = new Uint32Array(buffers[4]);
+            var invoke_def_buffer = new Uint8Array(buffers[5]);
+
+            dic.loadUnknownDictionaries(
+              unk_buffer,
+              unk_pos_buffer,
+              unk_map_buffer,
+              cat_map_buffer,
+              compat_cat_map_buffer,
+              invoke_def_buffer,
+            );
+            // dic.loadUnknownDictionaries(char_buffer, unk_buffer);
+            callback(null);
+          },
+        );
+      },
+    ],
+    function (err) {
+      load_callback(err, dic);
+    },
+  );
 };
 
 /**
@@ -134,4 +181,4 @@ DictionaryLoader.prototype.load = function (load_callback) {
  * @param {DynamicDictionaries} dic Loaded dictionary
  */
 
-module.exports = DictionaryLoader;
+export default DictionaryLoader;

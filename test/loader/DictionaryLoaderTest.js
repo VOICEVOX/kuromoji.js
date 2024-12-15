@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
@@ -15,55 +16,65 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
-var DictionaryLoader = require("../../src/loader/NodeDictionaryLoader");
+import { expect } from "chai";
+import DictionaryLoader from "../../src/loader/NodeDictionaryLoader.js";
+
+import { describe, it, before } from "node:test";
 
 var DIC_DIR = "dict/";
 
 describe("DictionaryLoader", function () {
+  var dictionaries = null; // target object
 
-    var dictionaries = null; // target object
-
-    before(function (done) {
-        this.timeout(5 * 60 * 1000); // 5 min
-
-        var loader = new DictionaryLoader(DIC_DIR);
-        loader.load(function (err, dic) {
-            dictionaries = dic;
-            done();
-        });
+  before(async function () {
+    var loader = new DictionaryLoader(DIC_DIR);
+    dictionaries = await new Promise((resolve, reject) => {
+      loader.load((err, dic) => {
+        if (err) reject(err);
+        else resolve(dic);
+      });
     });
+  });
 
-    it("Unknown dictionaries are loaded properly", function () {
-        expect(dictionaries.unknown_dictionary.lookup(" ")).to.deep.eql({
-            class_id: 1,
-            class_name: "SPACE",
-            is_always_invoke: 0,
-            is_grouping: 1,
-            max_length: 0
-        });
+  it("Unknown dictionaries are loaded properly", function () {
+    expect(dictionaries.unknown_dictionary.lookup(" ")).to.deep.eql({
+      class_id: 1,
+      class_name: "SPACE",
+      is_always_invoke: 0,
+      is_grouping: 1,
+      max_length: 0,
     });
-    it("TokenInfoDictionary is loaded properly", function () {
-        expect(dictionaries.token_info_dictionary.getFeatures("0")).to.have.length.above(1);
-    });
+  });
+  it("TokenInfoDictionary is loaded properly", function () {
+    expect(
+      dictionaries.token_info_dictionary.getFeatures("0"),
+    ).to.have.length.above(1);
+  });
 });
 
 describe("DictionaryLoader about loading", function () {
-    it("could load directory path without suffix /", function (done) {
-        this.timeout(5 * 60 * 1000); // 5 min
-        
-        var loader = new DictionaryLoader("dict"); // not have suffix /
-        loader.load(function (err, dic) {
-            expect(err).to.be.null;
-            expect(dic).to.not.be.undefined;
-            done();
-        });
+  it("could load directory path without suffix /", async function () {
+    var loader = new DictionaryLoader("dict"); // not have suffix /
+    const dic = await new Promise((resolve, reject) => {
+      loader.load((err, dic) => {
+        if (err) reject(err);
+        else resolve(dic);
+      });
     });
-    it("couldn't load dictionary, then call with error", function (done) {
-        var loader = new DictionaryLoader("non-exist/dictionaries");
-        loader.load(function (err, dic) {
-            expect(err).to.be.an.instanceof(Error);
-            done();
+    expect(dic).to.not.be.undefined;
+  });
+
+  it("couldn't load dictionary, then call with error", async function () {
+    var loader = new DictionaryLoader("non-exist/dictionaries");
+    try {
+      await new Promise((resolve, reject) => {
+        loader.load((err, dic) => {
+          if (err) reject(err);
+          else resolve(dic);
         });
-    });
+      });
+    } catch (err) {
+      expect(err).to.be.an.instanceof(Error);
+    }
+  });
 });

@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
@@ -15,19 +16,13 @@
  * limitations under the License.
  */
 
-"use strict";
+import TokenizerBuilder from "./TokenizerBuilder.js";
+import DictionaryBuilder from "./dict/builder/DictionaryBuilder.js";
 
-var TokenizerBuilder = require("./TokenizerBuilder");
-var DictionaryBuilder = require("./dict/builder/DictionaryBuilder");
+export function builder(option) {
+  return new TokenizerBuilder(option);
+}
 
-// Public methods
-var kuromoji = {
-    builder: function (option) {
-        return new TokenizerBuilder(option);
-    },
-    dictionaryBuilder: function () {
-        return new DictionaryBuilder();
-    }
-};
-
-module.exports = kuromoji;
+export function dictionaryBuilder() {
+  return new DictionaryBuilder();
+}

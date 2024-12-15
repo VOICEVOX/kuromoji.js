@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
@@ -15,35 +16,44 @@
  * limitations under the License.
  */
 
-var expect = require("chai").expect;
-var DictionaryLoader = require("../../src/loader/NodeDictionaryLoader");
-var ViterbiBuilder = require("../../src/viterbi/ViterbiBuilder");
+import { expect } from "chai";
+import DictionaryLoader from "../../src/loader/NodeDictionaryLoader.js";
+import ViterbiBuilder from "../../src/viterbi/ViterbiBuilder.js";
+
+import { describe, it, before } from "node:test";
 
 var DIC_DIR = "dict/";
 
 describe("ViterbiBuilder", function () {
-    var viterbi_builder = null;  // target object
+  var viterbi_builder = null; // target object
 
-    before(function (done) {
-        this.timeout(5 * 60 * 1000); // 5 min
-        var loader = new DictionaryLoader(DIC_DIR);
-        loader.load(function (err, dic) {
-            viterbi_builder = new ViterbiBuilder(dic);
-            done();
-        });
-    });
-
-    it("Unknown word", function () {
-        // lattice to have "ト", "トト", "トトロ"
-        var lattice = viterbi_builder.build("トトロ");
-        for (var i = 1; i < lattice.eos_pos; i++) {
-            var nodes = lattice.nodes_end_at[i];
-            if (nodes == null) {
-                continue;
-            }
-            expect(nodes.map(function (node) {
-                return node.surface_form;
-            })).to.include("トトロ".slice(0, i));
+  before(async function () {
+    var loader = new DictionaryLoader(DIC_DIR);
+    const dic = await new Promise((resolve, reject) => {
+      loader.load((err, dic) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(dic);
         }
+      });
     });
+    viterbi_builder = new ViterbiBuilder(dic);
+  });
+
+  it("Unknown word", function () {
+    // lattice to have "ト", "トト", "トトロ"
+    var lattice = viterbi_builder.build("トトロ");
+    for (var i = 1; i < lattice.eos_pos; i++) {
+      var nodes = lattice.nodes_end_at[i];
+      if (nodes == null) {
+        continue;
+      }
+      expect(
+        nodes.map(function (node) {
+          return node.surface_form;
+        }),
+      ).to.include("トトロ".slice(0, i));
+    }
+  });
 });

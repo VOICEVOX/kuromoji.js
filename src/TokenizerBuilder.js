@@ -1,4 +1,5 @@
 /*
+ * Copyright 2024 VOICEVOX
  * Copyright 2014 Takuya Asano
  * Copyright 2010-2014 Atilika Inc. and contributors
  *
@@ -15,10 +16,9 @@
  * limitations under the License.
  */
 
-"use strict";
-
-var Tokenizer = require("./Tokenizer");
-var DictionaryLoader = require("./loader/NodeDictionaryLoader");
+import Tokenizer from "./Tokenizer.js";
+import NodeDictionaryLoader from "./loader/NodeDictionaryLoader.js";
+import BrowserDictionaryLoader from "./loader/BrowserDictionaryLoader.js";
 
 /**
  * TokenizerBuilder create Tokenizer instance.
@@ -27,11 +27,19 @@ var DictionaryLoader = require("./loader/NodeDictionaryLoader");
  * @constructor
  */
 function TokenizerBuilder(option) {
-    if (option.dicPath == null) {
-        this.dic_path = "dict/";
-    } else {
-        this.dic_path = option.dicPath;
-    }
+  const node_or_browser = option.nodeOrBrowser;
+  if (node_or_browser != "node" && node_or_browser != "browser") {
+    throw new Error(
+      `Invalid value for nodeOrBrowser: ${node_or_browser}. Expected 'node' or 'browser'`,
+    );
+  }
+  this.node_or_browser = node_or_browser;
+
+  if (option.dicPath == null) {
+    this.dic_path = "dict/";
+  } else {
+    this.dic_path = option.dicPath;
+  }
 }
 
 /**
@@ -39,10 +47,13 @@ function TokenizerBuilder(option) {
  * @param {TokenizerBuilder~onLoad} callback Callback function
  */
 TokenizerBuilder.prototype.build = function (callback) {
-    var loader = new DictionaryLoader(this.dic_path);
-    loader.load(function (err, dic) {
-        callback(err, new Tokenizer(dic));
-    });
+  var loader =
+    this.node_or_browser == "node"
+      ? new NodeDictionaryLoader(this.dic_path)
+      : new BrowserDictionaryLoader(this.dic_path);
+  loader.load(function (err, dic) {
+    callback(err, new Tokenizer(dic));
+  });
 };
 
 /**
@@ -52,4 +63,4 @@ TokenizerBuilder.prototype.build = function (callback) {
  * @param {Tokenizer} tokenizer Prepared Tokenizer
  */
 
-module.exports = TokenizerBuilder;
+export default TokenizerBuilder;
