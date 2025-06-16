@@ -25,5 +25,6 @@
     "@types/doublearray": "^0.0.32",
     "chai": "^5.1.2",
     "prettier": "^3.4.2"
-  }
+  },
+  "sideEffects": false
 }
