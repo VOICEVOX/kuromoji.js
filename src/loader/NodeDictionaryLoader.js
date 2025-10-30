@@ -15,10 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import fs from "fs";
-import node_zlib from "zlib";
 import DictionaryLoader from "./DictionaryLoader.js";
+
+function createLoadModule() {
+  const modulesCache = new Map();
+
+  return function loadModule(modulePath) {
+    if (modulesCache.has(modulePath)) {
+      return modulesCache.get(modulePath);
+    }
+    const module = import(modulePath);
+    modulesCache.set(modulePath, module);
+    return module;
+  };
+}
+const loadModule = createLoadModule();
 
 /**
  * NodeDictionaryLoader inherits DictionaryLoader
@@ -37,18 +48,25 @@ NodeDictionaryLoader.prototype = Object.create(DictionaryLoader.prototype);
  * @param {NodeDictionaryLoader~onLoad} callback Callback function
  */
 NodeDictionaryLoader.prototype.loadArrayBuffer = function (file, callback) {
-  fs.readFile(file, function (err, buffer) {
-    if (err) {
-      return callback(err);
-    }
-    node_zlib.gunzip(buffer, function (err2, decompressed) {
-      if (err2) {
-        return callback(err2);
-      }
-      var typed_array = new Uint8Array(decompressed);
-      callback(null, typed_array.buffer);
-    });
-  });
+  Promise.all([loadModule("fs"), loadModule("zlib")]).then(
+    ([fs, node_zlib]) => {
+      fs.readFile(file, function (err, buffer) {
+        if (err) {
+          return callback(err);
+        }
+        node_zlib.gunzip(buffer, function (err2, decompressed) {
+          if (err2) {
+            return callback(err2);
+          }
+          var typed_array = new Uint8Array(decompressed);
+          callback(null, typed_array.buffer);
+        });
+      });
+    },
+    (err) => {
+      callback(err);
+    },
+  );
 };
 
 /**
